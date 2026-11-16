@@ -23,9 +23,11 @@ opportunity-radar/
 |-- src/
 |   `-- opportunity_radar/
 |       |-- cli.py                  # Command-line interface
+|       |-- api.py                  # FastAPI application and routes
 |       |-- models.py               # Opportunity data model
 |       |-- sources.py              # JSON and Greenhouse source adapters
-|       `-- store.py                # SQLite storage and search
+|       |-- store.py                # SQLite storage and search
+|       `-- static/                 # FastAPI-served HTML, CSS, and JavaScript
 |-- tests/                          # pytest suite
 `-- pyproject.toml                  # Package metadata and CLI entry point
 ```
@@ -159,10 +161,18 @@ Install the API extra as shown in [Windows setup](#windows-setup), then start Uv
 uvicorn opportunity_radar.api:app --reload
 ```
 
-The server uses the same default SQLite path as the CLI: `data/opportunities.sqlite3`. Open `http://127.0.0.1:8000/docs` for the interactive API documentation.
+The server serves the website and API from the same origin and uses the same default SQLite path as the CLI: `data/opportunities.sqlite3`. Open `http://127.0.0.1:8000/` for Opportunity Radar or `http://127.0.0.1:8000/docs` for the interactive API documentation.
+
+Collect listings before opening the website. For example, to collect from the configured Greenhouse boards:
+
+```powershell
+radar collect-greenhouse-all --config data/greenhouse_employers.json
+```
+
+The page reads stored listings through the API; it does not contact Greenhouse directly or collect listings automatically. It omits the reserved `example.org` placeholder URLs used in sample data so they are not shown as real opportunities.
 
 Available endpoints:
 
 - `GET /health` checks the API and SQLite connection.
-- `GET /api/opportunities` lists all stored opportunities. Optional `q`, `category`, and `location` query parameters apply the existing store search filters.
+- `GET /api/opportunities` lists stored opportunities. Optional `q`, `company`, `category`, and `location` query parameters apply the store search filters.
 - `GET /api/opportunities/{opportunity_id}` retrieves one opportunity by its SQLite ID and returns 404 when it does not exist.

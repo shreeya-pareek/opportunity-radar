@@ -91,6 +91,27 @@ def test_filters_by_location(store):
     assert [row["title"] for row in rows] == ["Local Internship"]
 
 
+def test_filters_by_company(store):
+    store.upsert(
+        make_opportunity(
+            "North Lab Internship",
+            "https://north.example.test/internship",
+            organization="North Lab",
+        )
+    )
+    store.upsert(
+        make_opportunity(
+            "West Institute Internship",
+            "https://west.example.test/internship",
+            organization="West Institute",
+        )
+    )
+
+    rows = store.search(company="north")
+
+    assert [row["title"] for row in rows] == ["North Lab Internship"]
+
+
 def test_updates_listing_with_same_url_without_adding_row(store):
     url = "https://example.org/same-listing"
     store.upsert(make_opportunity("Original title", url))

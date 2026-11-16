@@ -6,6 +6,8 @@ from typing import AsyncIterator
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from pydantic import BaseModel
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from .store import OpportunityStore
 
@@ -35,6 +37,7 @@ def _response(row: sqlite3.Row) -> OpportunityResponse:
 def create_app(db_path: Path | str = Path("data/opportunities.sqlite3")) -> FastAPI:
     """Create the API app using the CLI's default database path unless overridden."""
     database_path = Path(db_path)
+    static_path = Path(__file__).resolve().parent / "static"
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -46,6 +49,10 @@ def create_app(db_path: Path | str = Path("data/opportunities.sqlite3")) -> Fast
             store.close()
 
     app = FastAPI(title="Opportunity Radar API", version="0.1.0", lifespan=lifespan)
+
+    @app.get("/", include_in_schema=False)
+    async def homepage() -> FileResponse:
+        return FileResponse(static_path / "index.html")
 
     @app.get("/health", response_model=HealthResponse)
     async def health(request: Request) -> HealthResponse:
@@ -60,9 +67,10 @@ def create_app(db_path: Path | str = Path("data/opportunities.sqlite3")) -> Fast
         q: str = Query(default="", description="Search title, organization, description, and eligibility"),
         category: str = Query(default=""),
         location: str = Query(default=""),
+        company: str = Query(default=""),
     ) -> list[OpportunityResponse]:
         store: OpportunityStore = request.app.state.opportunity_store
-        rows = store.search(query=q, category=category, location=location)
+        rows = store.search(query=q, category=category, location=location, company=company)
         return [_response(row) for row in rows]
 
     @app.get("/api/opportunities/{opportunity_id}", response_model=OpportunityResponse)
@@ -75,6 +83,7 @@ def create_app(db_path: Path | str = Path("data/opportunities.sqlite3")) -> Fast
             raise HTTPException(status_code=404, detail="Opportunity not found")
         return _response(row)
 
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
     return app
 
 

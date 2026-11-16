@@ -113,6 +113,15 @@ def test_filters_opportunities_by_category_and_location(api_client):
     assert [item["title"] for item in response.json()] == ["Climate Research Internship"]
 
 
+def test_filters_opportunities_by_company(api_client):
+    client, _ = api_client
+
+    response = client.get("/api/opportunities", params={"company": "north"})
+
+    assert response.status_code == 200
+    assert [item["organization"] for item in response.json()] == ["North Lab"]
+
+
 def test_returns_empty_list_when_filters_match_no_opportunities(api_client):
     client, _ = api_client
 
@@ -147,6 +156,24 @@ def test_returns_422_for_non_integer_opportunity_id(api_client):
     response = client.get("/api/opportunities/not-an-id")
 
     assert response.status_code == 422
+
+
+def test_serves_homepage_and_static_assets(api_client):
+    client, _ = api_client
+
+    homepage = client.get("/")
+    stylesheet = client.get("/static/css/styles.css")
+    script = client.get("/static/js/app.js")
+
+    assert homepage.status_code == 200
+    assert "Navigate opportunities." in homepage.text
+    assert '<h1 id="hero-title">Opportunity <em>Radar</em></h1>' in homepage.text
+    assert '<p class="hero-tagline">Navigate opportunities. Discover possibilities.</p>' in homepage.text
+    assert stylesheet.status_code == 200
+    assert "#111827" in stylesheet.text
+    assert script.status_code == 200
+    assert "isDisplayableOpportunity" in script.text
+    assert 'host === "example.org"' in script.text
 
 
 def test_closes_database_connection_when_app_lifespan_ends(tmp_path, monkeypatch):

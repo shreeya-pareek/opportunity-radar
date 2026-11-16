@@ -63,7 +63,13 @@ class OpportunityStore:
         self.connection.commit()
         return "updated"
 
-    def search(self, query: str = "", category: str = "", location: str = "") -> list[sqlite3.Row]:
+    def search(
+        self,
+        query: str = "",
+        category: str = "",
+        location: str = "",
+        company: str = "",
+    ) -> list[sqlite3.Row]:
         clauses, values = [], []
         if query:
             clauses.append("(title LIKE ? OR organization LIKE ? OR description LIKE ? OR eligibility LIKE ?)")
@@ -74,6 +80,9 @@ class OpportunityStore:
         if location:
             clauses.append("location LIKE ?")
             values.append(f"%{location}%")
+        if company:
+            clauses.append("organization LIKE ?")
+            values.append(f"%{company}%")
         where = " WHERE " + " AND ".join(clauses) if clauses else ""
         return self.connection.execute(
             "SELECT * FROM opportunities" + where + " ORDER BY deadline = '', deadline, title", values

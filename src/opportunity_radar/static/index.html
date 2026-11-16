@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111827">
+    <meta name="description" content="Find internship opportunities from employers you can apply to directly.">
+    <title>Opportunity Radar — Navigate what’s next</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#opportunities">Skip to opportunities</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="#top" aria-label="Opportunity Radar home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="16.5" stroke="currentColor" stroke-width="1.2" />
+              <path d="M20 7.5 23.1 17l9.4 3-9.4 3-3.1 9.5L16.9 23l-9.4-3 9.4-3L20 7.5Z" fill="currentColor" />
+              <circle cx="20" cy="20" r="2.2" fill="#111827" />
+            </svg>
+          </span>
+          <span class="brand-name">Opportunity <span>Radar</span></span>
+        </a>
+        <nav class="top-nav" aria-label="Main navigation">
+          <a href="#opportunities">Opportunities</a>
+          <a href="#about">About</a>
+          <a class="nav-github" href="https://github.com/shreeya-pareek/opportunity-radar" target="_blank" rel="noopener noreferrer">
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-rule" aria-hidden="true"></span> A clearer view of what’s next</p>
+          <h1 id="hero-title">Opportunity <em>Radar</em></h1>
+          <p class="hero-tagline">Navigate opportunities. Discover possibilities.</p>
+          <p class="hero-description">Find an internship that moves you forward. Explore openings from the employers in your radar, all in one considered view.</p>
+          <a class="hero-link" href="#opportunities">Explore internships <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-outer"></div>
+          <div class="orbit orbit-middle"></div>
+          <div class="orbit orbit-inner"></div>
+          <div class="orbit-axis orbit-axis-horizontal"></div>
+          <div class="orbit-axis orbit-axis-vertical"></div>
+          <div class="orbit-center"><span></span></div>
+          <div class="orbit-point orbit-point-one"></div>
+          <div class="orbit-point orbit-point-two"></div>
+          <p class="orbit-caption">FIND YOUR<br>TRUE NORTH</p>
+        </div>
+      </section>
+
+      <section class="opportunities-section" id="opportunities" aria-labelledby="opportunities-title">
+        <div class="shell">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">THE OPPORTUNITY EDIT</p>
+              <h2 id="opportunities-title">Find your next <em>beginning.</em></h2>
+            </div>
+            <p class="section-note">Thoughtful discovery starts<br>with the right direction.</p>
+          </div>
+
+          <form class="search-panel" id="filters-form" role="search">
+            <label class="search-field" for="search-input">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+              <span class="visually-hidden">Search roles, employers, and keywords</span>
+              <input id="search-input" name="q" type="search" placeholder="Search roles, companies, or keywords" autocomplete="off">
+            </label>
+            <button class="search-button" type="submit">Search <span aria-hidden="true">→</span></button>
+            <div class="filter-row">
+              <label class="filter-control">
+                <span>Company</span>
+                <select id="company-filter" name="company" aria-label="Filter by company">
+                  <option value="">All companies</option>
+                </select>
+              </label>
+              <label class="filter-control">
+                <span>Category</span>
+                <select id="category-filter" name="category" aria-label="Filter by category">
+                  <option value="Internship">Internships</option>
+                </select>
+              </label>
+              <label class="filter-control">
+                <span>Location</span>
+                <select id="location-filter" name="location" aria-label="Filter by location">
+                  <option value="">All locations</option>
+                </select>
+              </label>
+              <button class="clear-button" id="clear-filters" type="button">Clear filters</button>
+            </div>
+          </form>
+
+          <div class="results-toolbar">
+            <p id="results-count" class="results-count" aria-live="polite">Preparing your opportunities…</p>
+            <p class="results-order"><span class="status-dot" aria-hidden="true"></span> Sorted by upcoming deadline</p>
+          </div>
+
+          <div class="loading-grid" id="loading-state" aria-label="Loading opportunities">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+          <div class="opportunity-grid" id="opportunity-grid" aria-live="polite"></div>
+
+          <div class="message-state" id="empty-state" hidden>
+            <div class="message-symbol" aria-hidden="true">◎</div>
+            <h3 id="empty-title">No internships in your radar just yet.</h3>
+            <p id="empty-description">Collect listings from your configured Greenhouse boards, then return to explore them here.</p>
+            <button class="text-button" id="empty-clear" type="button">Clear filters <span aria-hidden="true">→</span></button>
+          </div>
+
+          <div class="message-state error-state" id="error-state" role="alert" hidden>
+            <div class="message-symbol" aria-hidden="true">!</div>
+            <h3>We couldn’t reach your opportunities.</h3>
+            <p id="error-description">Check that the Opportunity Radar API is running, then try again.</p>
+            <button class="text-button" id="retry-button" type="button">Try again <span aria-hidden="true">↻</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section shell" id="about" aria-labelledby="about-title">
+        <div class="about-kicker"><span>01</span><span class="eyebrow-rule" aria-hidden="true"></span> OUR PURPOSE</div>
+        <div class="about-copy">
+          <h2 id="about-title">A little more clarity<br>for the <em>road ahead.</em></h2>
+          <div class="about-text">
+            <p>Opportunity Radar brings internship listings from selected employer boards into one calm, searchable space. Spend less time sorting through noise and more time finding the work that fits your ambition.</p>
+            <p>Every listing keeps its original application link. Check the employer’s posting for current availability, eligibility, and details before applying.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <a class="brand footer-brand" href="#top" aria-label="Opportunity Radar home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="16.5" stroke="currentColor" stroke-width="1.2" />
+              <path d="M20 7.5 23.1 17l9.4 3-9.4 3-3.1 9.5L16.9 23l-9.4-3 9.4-3L20 7.5Z" fill="currentColor" />
+              <circle cx="20" cy="20" r="2.2" fill="#111827" />
+            </svg>
+          </span>
+          <span class="brand-name">Opportunity <span>Radar</span></span>
+        </a>
+        <p class="made-by">Made with <span aria-label="love">❤️</span> by Shreeya Pareek</p>
+        <a class="footer-link" href="https://github.com/shreeya-pareek/opportunity-radar" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </footer>
+  </body>
+</html>
