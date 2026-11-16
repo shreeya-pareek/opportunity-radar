@@ -79,5 +79,17 @@ class OpportunityStore:
             "SELECT * FROM opportunities" + where + " ORDER BY deadline = '', deadline, title", values
         ).fetchall()
 
+    def get_by_id(self, opportunity_id: int) -> sqlite3.Row | None:
+        return self.connection.execute(
+            "SELECT * FROM opportunities WHERE id = ?", (opportunity_id,)
+        ).fetchone()
+
+    def check_health(self) -> bool:
+        try:
+            self.connection.execute("SELECT 1").fetchone()
+        except sqlite3.Error:
+            return False
+        return True
+
     def close(self) -> None:
         self.connection.close()

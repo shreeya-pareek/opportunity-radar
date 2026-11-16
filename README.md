@@ -42,6 +42,12 @@ python -m pip install -e .
 
 After activation, the virtual environment is shown in the PowerShell prompt. The editable install makes the `radar` command available while using the project source tree.
 
+Install the optional FastAPI backend dependencies when you want to run the API:
+
+```powershell
+python -m pip install -e ".[api]"
+```
+
 If PowerShell blocks activation, allow scripts for the current session only, then activate again:
 
 ```powershell
@@ -130,10 +136,10 @@ SQLite enforces a unique constraint on `application_url`. Collecting the same UR
 
 ## Run the tests
 
-Install pytest in the active environment if it is not already available, then run the test suite:
+Install the project's test tools in the active environment, then run the suite:
 
 ```powershell
-python -m pip install pytest
+python -m pip install -e ".[test]"
 python -m pytest
 ```
 
@@ -144,3 +150,19 @@ python -m pytest --basetemp .pytest-tmp
 ```
 
 Greenhouse tests use mocked HTTP responses and do not make real API requests. Tests that use temporary JSON files or databases use pytest's temporary-path fixture.
+
+## Run the API locally
+
+Install the API extra as shown in [Windows setup](#windows-setup), then start Uvicorn from the project directory:
+
+```powershell
+uvicorn opportunity_radar.api:app --reload
+```
+
+The server uses the same default SQLite path as the CLI: `data/opportunities.sqlite3`. Open `http://127.0.0.1:8000/docs` for the interactive API documentation.
+
+Available endpoints:
+
+- `GET /health` checks the API and SQLite connection.
+- `GET /api/opportunities` lists all stored opportunities. Optional `q`, `category`, and `location` query parameters apply the existing store search filters.
+- `GET /api/opportunities/{opportunity_id}` retrieves one opportunity by its SQLite ID and returns 404 when it does not exist.

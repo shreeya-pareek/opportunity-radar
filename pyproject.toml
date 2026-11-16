@@ -9,6 +9,10 @@ description = "A source-aware collector and tracker for study and career opportu
 requires-python = ">=3.11"
 dependencies = []
 
+[project.optional-dependencies]
+api = ["fastapi>=0.115", "uvicorn>=0.34"]
+test = ["pytest>=8", "httpx2"]
+
 [project.scripts]
 radar = "opportunity_radar.cli:main"
 
