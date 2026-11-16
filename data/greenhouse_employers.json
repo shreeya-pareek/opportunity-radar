@@ -1,0 +1,12 @@
+{
+  "employers": [
+    {
+      "display_name": "MongoDB",
+      "board_token": "mdbgeneralreferrals"
+    },
+    {
+      "display_name": "Vercel",
+      "board_token": "vercel"
+    }
+  ]
+}
